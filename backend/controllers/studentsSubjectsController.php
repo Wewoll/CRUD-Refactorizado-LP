@@ -21,19 +21,15 @@ function handleGet($conn)
 function handlePost($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
-    
+
     $result = assignSubjectToStudent($conn, $input['student_id'], $input['subject_id'], $input['approved']);
-    if ($result['inserted'] > 0) 
-    {
+    
+    if ($result['inserted'] > 0) {
         sendSuccess("Asignación realizada");
-    } 
-    else if (($result['error_code'] ?? null) == 1062) 
-    {
+    } else if (($result['error_code'] ?? null) == 1062) {
         sendError(400, "La relación entre el estudiante y la materia ya existe.");
-    }
-    else 
-    {
-        sendError(500, "Error al asignar");
+    } else {
+        sendError(500, "Ocurrió un error inesperado al asignar el estudiante a la materia.");
     }
 }
 

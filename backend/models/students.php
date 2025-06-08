@@ -56,14 +56,21 @@ function updateStudent($conn, $id, $fullname, $email, $age)
     return ['updated' => $stmt->affected_rows];
 }
 
-function deleteStudent($conn, $id) 
-{
-    $sql = "DELETE FROM students WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-
-    //Se retorna fila afectadas para validar en controlador
-    return ['deleted' => $stmt->affected_rows];
+function deleteStudent($conn, $id) {
+    try {
+        $sql = "DELETE FROM students WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $deleted = $stmt->affected_rows;
+        $stmt->close();
+        return ['deleted' => $deleted];
+    } catch (mysqli_sql_exception $e) {
+        return [
+            'deleted' => 0,
+            'error_code' => $e->getCode(),
+            'error' => $e->getMessage()
+        ];
+    }
 }
 ?>

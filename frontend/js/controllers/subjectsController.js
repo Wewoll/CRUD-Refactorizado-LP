@@ -117,24 +117,21 @@ function createSubjectActionsCell(subject)
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Borrar';
     deleteBtn.className = 'w3-button w3-red w3-small w3-margin-left';
-    deleteBtn.addEventListener('click', () => confirmDeleteSubject(subject.id));
+    deleteBtn.addEventListener('click', () => confirmDelete(subject.id));
 
     td.appendChild(editBtn);
     td.appendChild(deleteBtn);
     return td;
 }
 
-async function confirmDeleteSubject(id)
-{
+async function confirmDelete(id) {
     if (!confirm('¿Seguro que deseas borrar esta materia?')) return;
-
-    try
-    {
+    try {
         await subjectsAPI.remove(id);
+        sharedUI.showMessage('Materia borrada correctamente.', 'success');
         loadSubjects();
-    }
-    catch (err)
-    {
-        console.error('Error al borrar materia:', err.message);
+    } catch (err) {
+        console.error(err);
+        sharedUI.showMessage(err.message, 'error');
     }
 }

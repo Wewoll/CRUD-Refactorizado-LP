@@ -142,10 +142,10 @@ function fillForm(student)
 async function confirmDelete(id) 
 {
     if (!confirm('¿Estás seguro que deseas borrar este estudiante?')) return;
-  
+
     try {
         await studentsAPI.remove(id);
-        sharedUI.showMessage('Estudiante borrado correctamente', 'success');
+        sharedUI.showMessage('Estudiante borrado correctamente.', 'success');
         loadStudents();
     } catch (err) {
         console.error(err);

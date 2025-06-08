@@ -37,9 +37,9 @@ function handlePost($conn)
     if ($result['inserted'] > 0) {
         sendSuccess("Estudiante agregado correctamente");
     } else if (($result['error_code'] ?? null) == 1062) {
-        sendError(400, "El email del alumno ya está registrado.");
+        sendError(400, "El email del estudiante ya está registrado.");
     } else {
-        sendError(400, "Ocurrió un error inesperado. Intente nuevamente.");
+        sendError(400, "Ocurrió un error inesperado al agregar al estudinte.");
     }
 }
 
@@ -63,16 +63,13 @@ function handlePut($conn)
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
-
     $result = deleteStudent($conn, $input['id']);
-    if ($result['deleted'] > 0) 
-    {
-        echo json_encode(["message" => "Eliminado correctamente"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo eliminar"]);
+    if (($result['deleted'] ?? 0) > 0) {
+        sendSuccess("Estudiante eliminado correctamente.");
+    } else if (($result['error_code'] ?? null) == 1451) {
+        sendError(400, "No se puede borrar el estudiante porque está asignado a una o más materias.");
+    } else {
+        sendError(400, "Ocurrió un error inesperado al borrar al estudiante.");
     }
 }
 ?>

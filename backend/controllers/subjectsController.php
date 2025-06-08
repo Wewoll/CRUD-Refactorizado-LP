@@ -39,7 +39,7 @@ function handlePost($conn)
     } else if (($result['error_code'] ?? null) == 1062) {
         sendError(400, "El nombre de la materia ya está registrado.");
     } else {
-        sendError(400, "Ocurrió un error inesperado. Intente nuevamente.");
+        sendError(400, "Ocurrió un error inesperado al agregar la materia.");
     }
 }
 
@@ -59,19 +59,15 @@ function handlePut($conn)
     }
 }
 
-function handleDelete($conn) 
-{
+function handleDelete($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
-    
     $result = deleteSubject($conn, $input['id']);
-    if ($result['deleted'] > 0) 
-    {
-        echo json_encode(["message" => "Materia eliminada correctamente"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo eliminar"]);
+    if (($result['deleted'] ?? 0) > 0) {
+        sendSuccess("Materia eliminada correctamente.");
+    } else if (($result['error_code'] ?? null) == 1451) {
+        sendError(400, "No se puede borrar la materia porque está asignada a uno o más estudiantes.");
+    } else {
+        sendError(400, "Ocurrió un error inesperado al borrar la materia.");
     }
 }
 ?>
