@@ -6,39 +6,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gestión de Estudiantes</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon.png">
-  <link rel="stylesheet" href="../css/custom.css" />
-  <!-- <link rel="stylesheet" href="../css/w3.css" />
-  <link rel="stylesheet" href="../css/styles.css" /> -->
+  <link rel="icon" href="../img/icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
   <script type="module" src="../js/controllers/studentsController.js"></script>
 </head>
 
-<body class="w3-container">
+<body class="lp-font lp-container lp-light-grey">
 
-  <h2 class="w3-center w3-margin-top">Gestión de Estudiantes</h2>
+  <h2 class="lp-title lp-center lp-margin-top">Gestión de Estudiantes</h2>
 
-  <form id="studentForm" class="w3-card w3-padding w3-margin-bottom w3-light-grey">
+  <form id="studentForm" class="lp-card lp-padding lp-margin-bottom lp-white" novalidate>
     <input type="hidden" id="studentId" />
 
-    <div id="formFieldsRow" class="w3-row-padding">
-      <div class="w3-third">
-        <label>Nombre completo</label>
-        <input class="w3-input" type="text" id="fullname" required />
+    <div id="formFieldsRow" class="lp-row-padding">
+      <div class="lp-third">
+        <label for="fullname" class="lp-small-margin-left">Nombre completo</label>
+        <input class="lp-input" type="text" id="fullname" required />
       </div>
-      <div class="w3-third">
-        <label>Email</label>
-        <input class="w3-input" type="text" id="email" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"  required />
+      <div class="lp-third">
+        <label for="email" class="lp-small-margin-left">Email</label>
+        <input class="lp-input" type="text" id="email" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"  required />
       </div>
-      <div class="w3-third">
-        <label>Edad</label>
-        <input class="w3-input" type="number" id="age" required />
+      <div class="lp-third">
+        <label for="age" class="lp-small-margin-left">Edad</label>
+        <input class="lp-input" type="number" id="age" required />
       </div>
     </div>
   </form>
 
-  <table class="w3-table-all w3-hoverable w3-card">
+  <table class="lp-table-all lp-hoverable lp-card">
     <thead>
-      <tr class="w3-light-blue">
+      <tr class="lp-light-aquamarine">
         <th>Nombre</th>
         <th>Email</th>
         <th>Edad</th>

@@ -28,6 +28,24 @@ function setupFormHandler()
         e.preventDefault();
         const student = getFormData();
     
+        // Validación frontend
+        if (!student.fullname) {
+            sharedUI.showMessage('El nombre es obligatorio.', 'error');
+            sharedUI.markInputError('fullname');
+            return;
+        }
+        if (!student.email) {
+            sharedUI.showMessage('El email es obligatorio.', 'error');
+            sharedUI.markInputError('email');
+            return;
+        }
+        if (isNaN(student.age) || student.age < 1 || student.age > 120) {
+            sharedUI.showMessage('La edad debe ser un número válido.', 'error');
+            sharedUI.markInputError('age');
+            return;
+        }
+        
+
         try 
         {
             if (student.id) 
@@ -42,10 +60,18 @@ function setupFormHandler()
             }
             clearForm();
             loadStudents();
-        } 
-        catch (err) {
+        } catch (err) {
             console.error(err); // Para debugging
             sharedUI.showMessage(err.message, 'error'); // Para el usuario
+
+            // Detectar el input a marcar según el mensaje de error
+            if (err.message.includes('email')) {
+                sharedUI.markInputError('email');
+            } else if (err.message.includes('edad') || err.message.includes('Edad')) {
+                sharedUI.markInputError('age');
+            } else if (err.message.includes('nombre') || err.message.includes('Nombre')) {
+                sharedUI.markInputError('fullname');
+            }
         }
     });
 }
@@ -133,12 +159,12 @@ function createActionsCell(student)
   
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Editar';
-    editBtn.className = 'w3-button w3-blue w3-small';
+    editBtn.className = 'lp-button lp-cyan lp-small';
     editBtn.addEventListener('click', () => fillForm(student));
   
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Borrar';
-    deleteBtn.className = 'w3-button w3-red w3-small w3-margin-left';
+    deleteBtn.className = 'lp-button lp-coral lp-small lp-margin-left';
     deleteBtn.addEventListener('click', () => confirmDelete(student.id));
   
     td.appendChild(editBtn);
@@ -152,6 +178,7 @@ function fillForm(student)
     document.getElementById('fullname').value = student.fullname;
     document.getElementById('email').value = student.email;
     document.getElementById('age').value = student.age;
+    sharedUI.clearInputError(); 
     sharedUI.showMessage(`Editando a ${student.fullname}`, 'info'); // Azul por defecto
 }
   

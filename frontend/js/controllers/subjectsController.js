@@ -11,26 +11,28 @@
 import { subjectsAPI } from '../api/subjectsAPI.js';
 import * as sharedUI from '../common/sharedUI.js';
 
-document.addEventListener('DOMContentLoaded', async () => 
-{
+document.addEventListener('DOMContentLoaded', async () => {
     await sharedUI.loadSharedUI();
     loadSubjects();
-    setupSubjectFormHandler();
+    setupFormHandler();
     setupCancelHandler();
     sharedUI.setupFormMessageReset('subjectForm');
 });
 
-function setupSubjectFormHandler() 
+function setupFormHandler()
 {
-  const form = document.getElementById('subjectForm');
-  form.addEventListener('submit', async e => 
-  {
+    const form = document.getElementById('subjectForm');
+    form.addEventListener('submit', async e => 
+    {
         e.preventDefault();
-        const subject = 
-        {
-            id: document.getElementById('subjectId').value.trim(),
-            name: document.getElementById('name').value.trim()
-        };
+        const subject = getFormData();
+
+        // Validación frontend
+        if (!subject.name) {
+            sharedUI.showMessage('El nombre de la materia es obligatorio.', 'error');
+            sharedUI.markInputError('name');
+            return;
+        }
 
         try 
         {
@@ -44,26 +46,43 @@ function setupSubjectFormHandler()
                 await subjectsAPI.create(subject);
                 sharedUI.showMessage('Materia creada correctamente.', 'success');
             }
-            
-            form.reset();
-            document.getElementById('subjectId').value = '';
+            clearForm();
             loadSubjects();
         }
         catch (err)
         {
-            console.error(err.message);
+            console.error(err);
             sharedUI.showMessage(err.message, 'error');
+            // Detectar el input a marcar según el mensaje de error
+            if (err.message.includes('nombre') || err.message.includes('Nombre')) {
+                sharedUI.markInputError('name');
+            }
         }
-  });
+    });
 }
 
 function setupCancelHandler()
 {
     const cancelBtn = document.getElementById('cancelBtn');
-    cancelBtn.addEventListener('click', () => 
-    {
-        document.getElementById('subjectId').value = '';
-    });
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            clearForm();
+        });
+    }
+}
+
+function getFormData()
+{
+    return {
+        id: document.getElementById('subjectId').value.trim(),
+        name: document.getElementById('name').value.trim()
+    };
+}
+
+function clearForm()
+{
+    document.getElementById('subjectForm').reset();
+    document.getElementById('subjectId').value = '';
 }
 
 async function loadSubjects()
@@ -76,6 +95,7 @@ async function loadSubjects()
     catch (err)
     {
         console.error('Error cargando materias:', err.message);
+        sharedUI.showMessage('Error cargando materias.', 'error');
     }
 }
 
@@ -87,10 +107,8 @@ function renderSubjectTable(subjects)
     subjects.forEach(subject =>
     {
         const tr = document.createElement('tr');
-
         tr.appendChild(createCell(subject.name));
-        tr.appendChild(createSubjectActionsCell(subject));
-
+        tr.appendChild(createActionsCell(subject));
         tbody.appendChild(tr);
     });
 }
@@ -102,27 +120,31 @@ function createCell(text)
     return td;
 }
 
-function createSubjectActionsCell(subject)
+function createActionsCell(subject)
 {
     const td = document.createElement('td');
 
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Editar';
-    editBtn.className = 'w3-button w3-blue w3-small';
-    editBtn.addEventListener('click', () => 
-    {
-        document.getElementById('subjectId').value = subject.id;
-        document.getElementById('name').value = subject.name;
-    });
+    editBtn.className = 'lp-button lp-cyan lp-small';
+    editBtn.addEventListener('click', () => fillForm(subject));
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Borrar';
-    deleteBtn.className = 'w3-button w3-red w3-small w3-margin-left';
+    deleteBtn.className = 'lp-button lp-coral lp-small lp-margin-left';
     deleteBtn.addEventListener('click', () => confirmDelete(subject.id));
 
     td.appendChild(editBtn);
     td.appendChild(deleteBtn);
     return td;
+}
+
+function fillForm(subject)
+{
+    document.getElementById('subjectId').value = subject.id;
+    document.getElementById('name').value = subject.name;
+    sharedUI.clearInputError();
+    sharedUI.showMessage(`Editando materia: ${subject.name}`, 'info');
 }
 
 async function confirmDelete(id) {

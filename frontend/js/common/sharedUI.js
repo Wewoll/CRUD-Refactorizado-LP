@@ -19,6 +19,7 @@ export async function loadSharedUI() {
         closeBtn.addEventListener('click', () => {
           const box = document.getElementById('messageBox');
           if (box) box.style.display = 'none';
+          clearInputError();
         });
         clearInterval(closeBtnInterval);
       }
@@ -51,6 +52,42 @@ export function setupFormMessageReset(formId = 'studentForm') {
   }
 }
 
+let inputErrorTimeoutId = null;
+let lastInputError = null;
+// Marca el input con error visualmente
+export function markInputError(inputId, duration = 5000) {
+  // Limpiar error anterior si existe
+  if (lastInputError) {
+    lastInputError.classList.remove('lp-input-error');
+    lastInputError = null;
+  }
+  if (inputErrorTimeoutId) {
+    clearTimeout(inputErrorTimeoutId);
+    inputErrorTimeoutId = null;
+  }
+
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.classList.add('lp-input-error');
+  lastInputError = input;
+
+  // Timeout para limpiar si no se cierra antes
+  inputErrorTimeoutId = setTimeout(() => {
+    clearInputError();
+  }, duration);
+}
+
+export function clearInputError() {
+  if (lastInputError) {
+    lastInputError.classList.remove('lp-input-error');
+    lastInputError = null;
+  }
+  if (inputErrorTimeoutId) {
+    clearTimeout(inputErrorTimeoutId);
+    inputErrorTimeoutId = null;
+  }
+}
+
 // Variable para controlar el timeout del mensaje global
 let messageTimeoutId = null;
 // Muestra un mensaje en el cartel (error, éxito, info)
@@ -64,7 +101,7 @@ export function showMessage(text, type = 'info') {
   }
 
   // Limpiar clases previas y timeout anterior
-  box.className = 'w3-panel w3-display-container';
+  box.className = 'lp-panel lp-display-container';
   message.textContent = text;
   if (messageTimeoutId) {
     clearTimeout(messageTimeoutId);
@@ -74,16 +111,17 @@ export function showMessage(text, type = 'info') {
   // Si no hay texto, ocultar el cartel y salir
   if (!text) {
     box.style.display = 'none';
+    clearInputError();
     return;
   }
 
   // Estilos según tipo
   if (type === 'success') {
-    box.classList.add('w3-green');
+    box.classList.add('lp-green');
   } else if (type === 'error') {
-    box.classList.add('w3-red');
+    box.classList.add('lp-red');
   } else {
-    box.classList.add('w3-blue'); // info por defecto
+    box.classList.add('lp-blue'); // info por defecto
   }
 
   box.style.display = text ? 'block' : 'none';
@@ -93,6 +131,7 @@ export function showMessage(text, type = 'info') {
     messageTimeoutId = setTimeout(() => {
       box.style.display = 'none';
       messageTimeoutId = null;
+      clearInputError();
     }, 5000);
   }
 }

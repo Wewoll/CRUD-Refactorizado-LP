@@ -13,8 +13,7 @@ import { subjectsAPI } from '../api/subjectsAPI.js';
 import { studentsSubjectsAPI } from '../api/studentsSubjectsAPI.js';
 import * as sharedUI from '../common/sharedUI.js';
 
-document.addEventListener('DOMContentLoaded', async () => 
-{
+document.addEventListener('DOMContentLoaded', async () => {
     await sharedUI.loadSharedUI();
     initSelects();
     setupFormHandler();
@@ -23,15 +22,12 @@ document.addEventListener('DOMContentLoaded', async () =>
     sharedUI.setupFormMessageReset('relationForm');
 });
 
-async function initSelects() 
-{
-    try 
-    {
+async function initSelects() {
+    try {
         // Cargar estudiantes
         const students = await studentsAPI.fetchAll();
         const studentSelect = document.getElementById('studentIdSelect');
-        students.forEach(s => 
-        {
+        students.forEach(s => {
             const option = document.createElement('option');
             option.value = s.id;
             option.textContent = s.fullname;
@@ -41,62 +37,71 @@ async function initSelects()
         // Cargar materias
         const subjects = await subjectsAPI.fetchAll();
         const subjectSelect = document.getElementById('subjectIdSelect');
-        subjects.forEach(sub => 
-        {
+        subjects.forEach(sub => {
             const option = document.createElement('option');
             option.value = sub.id;
             option.textContent = sub.name;
             subjectSelect.appendChild(option);
         });
-    } 
-    catch (err) 
-    {
+    } catch (err) {
         console.error('Error cargando estudiantes o materias:', err.message);
+        sharedUI.showMessage('Error cargando estudiantes o materias.', 'error');
     }
 }
 
-function setupFormHandler() 
-{
+function setupFormHandler() {
     const form = document.getElementById('relationForm');
-    form.addEventListener('submit', async e => 
-    {
+    form.addEventListener('submit', async e => {
         e.preventDefault();
 
         const relation = getFormData();
 
-        try 
-        {
-            if (relation.id) 
-            {
+        // Validación frontend
+        if (!relation.student_id) {
+            sharedUI.showMessage('Debe seleccionar un estudiante.', 'error');
+            sharedUI.markInputError('studentIdSelect');
+            return;
+        }
+        if (!relation.subject_id) {
+            sharedUI.showMessage('Debe seleccionar una materia.', 'error');
+            sharedUI.markInputError('subjectIdSelect');
+            return;
+        }
+
+        try {
+            if (relation.id) {
                 await studentsSubjectsAPI.update(relation);
-            } 
-            else 
-            {
+                sharedUI.showMessage('Inscripción actualizada correctamente.', 'success');
+            } else {
                 await studentsSubjectsAPI.create(relation);
+                sharedUI.showMessage('Inscripción creada correctamente.', 'success');
             }
             clearForm();
             loadRelations();
-        } 
-        catch (err) 
-        {
+        } catch (err) {
             console.error('Error guardando relación:', err.message);
             sharedUI.showMessage(err.message, 'error');
+            // Detectar el input a marcar según el mensaje de error
+            if (err.message.includes('estudiante')) {
+                sharedUI.markInputError('studentIdSelect');
+            } else if (err.message.includes('materia')) {
+                sharedUI.markInputError('subjectIdSelect');
+            }
         }
     });
 }
 
-function setupCancelHandler()
-{
+function setupCancelHandler() {
     const cancelBtn = document.getElementById('cancelBtn');
-    cancelBtn.addEventListener('click', () => 
-    {
-        document.getElementById('relationId').value = '';
-    });
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            clearForm();
+        });
+    }
 }
 
-function getFormData() 
-{
-    return{
+function getFormData() {
+    return {
         id: document.getElementById('relationId').value.trim(),
         student_id: document.getElementById('studentIdSelect').value,
         subject_id: document.getElementById('subjectIdSelect').value,
@@ -104,81 +109,55 @@ function getFormData()
     };
 }
 
-function clearForm() 
-{
+function clearForm() {
     document.getElementById('relationForm').reset();
     document.getElementById('relationId').value = '';
 }
 
-async function loadRelations() 
-{
-    try 
-    {
+async function loadRelations() {
+    try {
         const relations = await studentsSubjectsAPI.fetchAll();
-        
-        /**
-         * DEBUG
-         */
-        //console.log(relations);
-
-        /**
-         * En JavaScript: Cualquier string que no esté vacío ("") es considerado truthy.
-         * Entonces "0" (que es el valor que llega desde el backend) es truthy,
-         * ¡aunque conceptualmente sea falso! por eso: 
-         * Se necesita convertir ese string "0" a un número real 
-         * o asegurarte de comparar el valor exactamente. 
-         * Con el siguiente código se convierten todos los string approved a enteros.
-         */
-        relations.forEach(rel => 
-        {
+        relations.forEach(rel => {
             rel.approved = Number(rel.approved);
         });
-        
         renderRelationsTable(relations);
-    } 
-    catch (err) 
-    {
+    } catch (err) {
         console.error('Error cargando inscripciones:', err.message);
+        sharedUI.showMessage('Error cargando inscripciones.', 'error');
     }
 }
 
-function renderRelationsTable(relations) 
-{
+function renderRelationsTable(relations) {
     const tbody = document.getElementById('relationTableBody');
     tbody.replaceChildren();
 
-    relations.forEach(rel => 
-    {
+    relations.forEach(rel => {
         const tr = document.createElement('tr');
-
         tr.appendChild(createCell(rel.student_fullname));
         tr.appendChild(createCell(rel.subject_name));
         tr.appendChild(createCell(rel.approved ? 'Sí' : 'No'));
         tr.appendChild(createActionsCell(rel));
-
         tbody.appendChild(tr);
     });
 }
 
-function createCell(text) 
-{
+function createCell(text) {
     const td = document.createElement('td');
     td.textContent = text;
     return td;
 }
 
-function createActionsCell(relation) 
-{
+function createActionsCell(relation) {
     const td = document.createElement('td');
 
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Editar';
-    editBtn.className = 'w3-button w3-blue w3-small';
+    editBtn.className = 'lp-button lp-cyan lp-small';
     editBtn.addEventListener('click', () => fillForm(relation));
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Borrar';
-    deleteBtn.className = 'w3-button w3-red w3-small w3-margin-left';
+    deleteBtn.className = 'lp-button lp-coral lp-small lp-margin-left';
     deleteBtn.addEventListener('click', () => confirmDelete(relation.id));
 
     td.appendChild(editBtn);
@@ -186,25 +165,24 @@ function createActionsCell(relation)
     return td;
 }
 
-function fillForm(relation) 
-{
+function fillForm(relation) {
     document.getElementById('relationId').value = relation.id;
     document.getElementById('studentIdSelect').value = relation.student_id;
     document.getElementById('subjectIdSelect').value = relation.subject_id;
     document.getElementById('approved').checked = !!relation.approved;
+    sharedUI.clearInputError();
+    sharedUI.showMessage('Editando inscripción', 'info');
 }
 
-async function confirmDelete(id) 
-{
+async function confirmDelete(id) {
     if (!confirm('¿Estás seguro que deseas borrar esta inscripción?')) return;
 
-    try 
-    {
+    try {
         await studentsSubjectsAPI.remove(id);
+        sharedUI.showMessage('Inscripción borrada correctamente.', 'success');
         loadRelations();
-    } 
-    catch (err) 
-    {
+    } catch (err) {
         console.error('Error al borrar inscripción:', err.message);
+        sharedUI.showMessage(err.message, 'error');
     }
 }

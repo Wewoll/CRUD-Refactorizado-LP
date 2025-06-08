@@ -6,45 +6,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Inscripción de Estudiantes a Materias</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon.png">
-  <link rel="stylesheet" href="../css/custom.css" />
-  <!-- <link rel="stylesheet" href="../css/w3.css" />
-  <link rel="stylesheet" href="../css/styles.css" /> -->
+  <link rel="icon" href="../img/icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
   <script type="module" src="../js/controllers/studentsSubjectsController.js"></script>
 </head>
 
-<body class="w3-container">
+<body class="lp-font lp-container lp-light-grey">
 
-  <h2 class="w3-center w3-margin-top">Asignación de Estudiantes a Materias</h2>
+  <h2 class="lp-title lp-center lp-margin-top">Asignación de Estudiantes a Materias</h2>
 
-  <form id="relationForm" class="w3-card w3-padding w3-margin-bottom w3-light-grey">
+  <form id="relationForm" class="lp-card lp-padding lp-margin-bottom lp-white" novalidate>
     <input type="hidden" id="relationId" />
 
-    <div id="formFieldsRow" class="w3-row-padding">
-      <div class="w3-third">
-        <label>Estudiante</label>
-        <select id="studentIdSelect" class="w3-select" required>
+    <div id="formFieldsRow" class="lp-row-padding">
+      <div class="lp-third">
+        <label for="studentIdSelect" class="lp-small-margin-left">Estudiante</label>
+        <select id="studentIdSelect" class="lp-select" required>
           <option value="" disabled selected>Seleccionar estudiante</option>
           <!-- Opciones se cargan dinámicamente desde JS -->
         </select>
       </div>
-      <div class="w3-third">
-        <label>Materia</label>
-        <select id="subjectIdSelect" class="w3-select" required>
+      <div class="lp-third">
+        <label for="subjectIdSelect" class="lp-small-margin-left">Materia</label>
+        <select id="subjectIdSelect" class="lp-select" required>
           <option value="" disabled selected>Seleccionar materia</option>
           <!-- Opciones se cargan dinámicamente desde JS -->
         </select>
       </div>
-      <div class="w3-third">
-        <label>Aprobado</label>
-        <input type="checkbox" id="approved" class="w3-check" />
+      <div class="lp-third">
+        <label for="approved" class="lp-small-margin-left">Aprobado</label>
+        <input type="checkbox" id="approved" class="lp-check" />
       </div>
     </div>
   </form>
 
-  <table class="w3-table-all w3-hoverable w3-card">
+  <table class="lp-table-all lp-hoverable lp-card">
     <thead>
-      <tr class="w3-light-blue">
+      <tr class="lp-light-aquamarine">
         <th>Estudiante</th>
         <th>Materia</th>
         <th>Aprobado</th>
