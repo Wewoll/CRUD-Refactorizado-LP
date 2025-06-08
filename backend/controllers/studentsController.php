@@ -26,8 +26,29 @@ function handleGet($conn) {
 
 function handlePost($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
+    $fullname = trim($input['fullname'] ?? '');
+    $email = trim($input['email'] ?? '');
+    $age = $input['age'] ?? '';
 
-    $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
+    // Validación de campos obligatorios
+    if ($fullname === '' || $email === '' || $age === '') {
+        sendError(400, "Todos los campos son obligatorios.");
+        return;
+    }
+
+    // Validación de email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        sendError(400, "El email ingresado no es válido.");
+        return;
+    }
+
+    // Validación de edad (opcional, pero recomendable)
+    if (!is_numeric($age) || intval($age) <= 0 || intval($age) > 100) {
+        sendError(400, "Por favor, ingrese una edad válida entre 1 y 100.");
+        return;
+    }
+
+    $result = createStudent($conn, $fullname, $email, intval($age));
 
     if ($result['inserted'] > 0) {
         sendSuccess("Estudiante agregado correctamente.");

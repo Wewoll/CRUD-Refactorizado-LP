@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupFormHandler();
     setupCancelHandler();
     sharedUI.setupFormMessageReset('studentForm');
+    setupEmailValidation();
 });
   
 function setupFormHandler()
@@ -56,6 +57,19 @@ function setupCancelHandler()
     {
         document.getElementById('studentId').value = '';
     });
+}
+
+function setupEmailValidation() {
+  const emailInput = document.getElementById('email');
+  if (!emailInput) return;
+
+  emailInput.addEventListener('input', () => {
+    if (emailInput.validity.patternMismatch) {
+      emailInput.setCustomValidity('Ingrese un email válido. Ej: nombre@dominio.com.ar');
+    } else {
+      emailInput.setCustomValidity('');
+    }
+  });
 }
   
 function getFormData()
