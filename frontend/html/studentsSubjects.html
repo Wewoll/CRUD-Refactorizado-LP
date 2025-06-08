@@ -19,7 +19,7 @@
   <form id="relationForm" class="w3-card w3-padding w3-margin-bottom w3-light-grey">
     <input type="hidden" id="relationId" />
 
-    <div class="w3-row-padding">
+    <div id="formFieldsRow" class="w3-row-padding">
       <div class="w3-third">
         <label>Estudiante</label>
         <select id="studentIdSelect" class="w3-select" required>
@@ -38,11 +38,6 @@
         <label>Aprobado</label>
         <input type="checkbox" id="approved" class="w3-check" />
       </div>
-    </div>
-
-    <div class="w3-margin-top">
-      <button class="w3-button w3-green" type="submit">Guardar</button>
-      <button id="cancelBtn" class="w3-button w3-grey" type="reset">Cancelar</button>
     </div>
   </form>
 

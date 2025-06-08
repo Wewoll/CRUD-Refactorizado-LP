@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () =>
     loadSubjects();
     setupSubjectFormHandler();
     setupCancelHandler();
+    sharedUI.setupFormMessageReset('subjectForm');
 });
 
 function setupSubjectFormHandler() 

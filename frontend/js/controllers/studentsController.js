@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadStudents();
     setupFormHandler();
     setupCancelHandler();
+    sharedUI.setupFormMessageReset('studentForm');
 });
   
 function setupFormHandler()
@@ -137,6 +138,7 @@ function fillForm(student)
     document.getElementById('fullname').value = student.fullname;
     document.getElementById('email').value = student.email;
     document.getElementById('age').value = student.age;
+    sharedUI.showMessage(`Editando a ${student.fullname}`, 'info'); // Azul por defecto
 }
   
 async function confirmDelete(id) 

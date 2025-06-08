@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () =>
     setupFormHandler();
     setupCancelHandler();
     loadRelations();
+    sharedUI.setupFormMessageReset('relationForm');
 });
 
 async function initSelects() 
