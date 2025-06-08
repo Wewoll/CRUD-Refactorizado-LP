@@ -12,58 +12,52 @@
 require_once("./models/students.php");
 require_once __DIR__ . '/../helpers/utils.php';
 
-function handleGet($conn) 
-{
+function handleGet($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
     
-    if (isset($input['id'])) 
-    {
+    if (isset($input['id'])) {
         $student = getStudentById($conn, $input['id']);
         echo json_encode($student);
-    } 
-    else
-    {
+    } else{
         $students = getAllStudents($conn);
         echo json_encode($students);
     }
 }
 
-function handlePost($conn) 
-{
+function handlePost($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
 
     $result = createStudent($conn, $input['fullname'], $input['email'], $input['age']);
 
     if ($result['inserted'] > 0) {
-        sendSuccess("Estudiante agregado correctamente");
+        sendSuccess("Estudiante agregado correctamente.");
     } else if (($result['error_code'] ?? null) == 1062) {
         sendError(400, "El email del estudiante ya está registrado.");
     } else {
-        sendError(400, "Ocurrió un error inesperado al agregar al estudinte.");
+        sendError(400, "Ocurrió un error inesperado al agregar al estudiante.");
     }
 }
 
 
-function handlePut($conn) 
-{
+function handlePut($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
 
     $result = updateStudent($conn, $input['id'], $input['fullname'], $input['email'], $input['age']);
-    if ($result['updated'] > 0) 
-    {
-        echo json_encode(["message" => "Actualizado correctamente"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo actualizar"]);
+
+    if ($result['updated'] > 0) {
+        sendSuccess("Estudiante actualizado correctamente");
+    } else if (($result['error_code'] ?? null) == 1062) {
+        sendError(400, "El email del estudiante ya está registrado.");
+    } else {
+        sendError(400, "Ocurrió un error inesperado al editar al estudiante.");
     }
 }
 
-function handleDelete($conn) 
-{
+function handleDelete($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
+
     $result = deleteStudent($conn, $input['id']);
+
     if (($result['deleted'] ?? 0) > 0) {
         sendSuccess("Estudiante eliminado correctamente.");
     } else if (($result['error_code'] ?? null) == 1451) {

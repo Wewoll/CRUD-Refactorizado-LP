@@ -11,8 +11,7 @@
 
 require_once __DIR__ . '/../helpers/utils.php';
 
-function routeRequest($conn, $customHandlers = [], $prefix = 'handle') 
-{
+function routeRequest($conn, $customHandlers = [], $prefix = 'handle') {
     $method = $_SERVER['REQUEST_METHOD'];
 
     // Lista de handlers CRUD por defecto
@@ -26,24 +25,18 @@ function routeRequest($conn, $customHandlers = [], $prefix = 'handle')
     // Sobrescribir handlers por defecto si hay personalizados
     $handlers = array_merge($defaultHandlers, $customHandlers);
 
-    if (!isset($handlers[$method])) 
-    {
-        http_response_code(405);
-        echo json_encode(["error" => "Método $method no permitido"]);
+    if (!isset($handlers[$method])) {
+        sendError(405, "Operación no permitida.");
         return;
     }
 
     $handler = $handlers[$method];
 
-    if (is_callable($handler)) 
-    {
+    if (is_callable($handler)) {
         $handler($conn);
         exit;
-    }
-    else
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "Handler para $method no es válido"]);
+    } else {
+        sendError(500, "Ocurrió un error inesperado.");
         exit;
     }
 }

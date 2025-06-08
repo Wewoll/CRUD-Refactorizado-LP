@@ -20,8 +20,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 require_once __DIR__ . '/helpers/utils.php';
 
 // Respuesta correcta para solicitudes OPTIONS (preflight)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS')
-{
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     sendSuccess("OK"); // 200 OK
 }
 
@@ -32,25 +31,20 @@ parse_str($query, $query_array);
 $module = $query_array['module'] ?? null;
 
 // Validación de existencia del módulo
-if (!$module)
-{
+if (!$module) {
     sendError(400, "Módulo no especificado");
 }
 
 // Validación de caracteres seguros: solo letras, números y guiones bajos
-if (!preg_match('/^\w+$/', $module))
-{
+if (!preg_match('/^\w+$/', $module)) {
     sendError(400, "Nombre de módulo inválido");
 }
 
 // Buscar el archivo de ruta correspondiente
 $routeFile = __DIR__ . "/routes/{$module}Routes.php";
 
-if (file_exists($routeFile))
-{
+if (file_exists($routeFile)) {
     require_once($routeFile);
-}
-else
-{
+} else {
     sendError(404, "Ruta para el módulo '{$module}' no encontrada");
 }

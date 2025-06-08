@@ -12,63 +12,55 @@
 require_once("./models/studentsSubjects.php");
 require_once __DIR__ . '/../helpers/utils.php';
 
-function handleGet($conn) 
-{
+function handleGet($conn) {
     $studentsSubjects = getAllSubjectsStudents($conn);
     echo json_encode($studentsSubjects);
 }
 
-function handlePost($conn) 
-{
+function handlePost($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
 
     $result = assignSubjectToStudent($conn, $input['student_id'], $input['subject_id'], $input['approved']);
-    
+
     if ($result['inserted'] > 0) {
-        sendSuccess("Asignación realizada");
+        sendSuccess("Relacion agregada correctamente.");
     } else if (($result['error_code'] ?? null) == 1062) {
         sendError(400, "La relación entre el estudiante y la materia ya existe.");
     } else {
-        sendError(500, "Ocurrió un error inesperado al asignar el estudiante a la materia.");
+        sendError(500, "Ocurrió un error inesperado al agregar la relación.");
     }
 }
 
-function handlePut($conn) 
-{
+function handlePut($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    if (!isset($input['id'], $input['student_id'], $input['subject_id'], $input['approved'])) 
-    {
-        http_response_code(400);
-        echo json_encode(["error" => "Datos incompletos"]);
+    if (!isset($input['id'], $input['student_id'], $input['subject_id'], $input['approved'])) {
+        sendError(400, "Datos incompletos.");
         return;
     }
 
     $result = updateStudentSubject($conn, $input['id'], $input['student_id'], $input['subject_id'], $input['approved']);
-    if ($result['updated'] > 0) 
-    {
-        echo json_encode(["message" => "Actualización correcta"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo actualizar"]);
+
+    if (($result['updated'] ?? 0) > 0) {
+        sendSuccess("Relación actualizada correctamente.");
+    } else if (($result['error_code'] ?? null) == 1062) {
+        sendError(400, "Ya existe una relación con ese estudiante y materia.");
+    } else {
+        sendError(500, "Ocurrio un error inesperado al editar la relación.");
     }
 }
 
-function handleDelete($conn) 
-{
+function handleDelete($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
 
     $result = removeStudentSubject($conn, $input['id']);
-    if ($result['deleted'] > 0) 
-    {
-        echo json_encode(["message" => "Relación eliminada"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo eliminar"]);
+
+    if (($result['deleted'] ?? 0) > 0) {
+        sendSuccess("Relación eliminada correctamente.");
+    } else if (($result['error_code'] ?? null) == 1451) {
+        sendError(400, "No se puede eliminar la relación porque está referenciada en otra tabla.");
+    } else {
+        sendError(500, "Ocurrio un error inesperado al borrar la relación.");
     }
 }
 ?>

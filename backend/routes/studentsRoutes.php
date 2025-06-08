@@ -13,7 +13,7 @@ require_once("./config/databaseConfig.php");
 require_once("./routes/routesFactory.php");
 require_once("./controllers/studentsController.php");
 
-// routeRequest($conn);
+routeRequest($conn);
 
 
 /**
@@ -21,6 +21,7 @@ require_once("./controllers/studentsController.php");
  * para casos particulares
  * o validaciones:
  */
+/*
 routeRequest($conn, [
     'POST' => function($conn) 
     {
@@ -35,3 +36,4 @@ routeRequest($conn, [
         handlePost($conn);
     }
 ]);
+*/
