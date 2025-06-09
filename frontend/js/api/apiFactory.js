@@ -8,14 +8,11 @@
 *    Iteration   : 3.0 ( prototype )
 */
 
-export function createAPI(moduleName, config = {}) 
-{
+export function createAPI(moduleName, config = {}) {
     const API_URL = config.urlOverride ?? `../../backend/server.php?module=${moduleName}`;
 
-    async function sendJSON(method, data) 
-    {
-        const res = await fetch(API_URL,
-        {
+    async function sendJSON(method, data) {
+        const res = await fetch(API_URL, {
             method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -36,22 +33,18 @@ export function createAPI(moduleName, config = {})
     }
 
     return {
-        async fetchAll()
-        {
+        async fetchAll() {
             const res = await fetch(API_URL);
             if (!res.ok) throw new Error("No se pudieron obtener los datos");
             return await res.json();
         },
-        async create(data)
-        {
+        async create(data) {
             return await sendJSON('POST', data);
         },
-        async update(data)
-        {
+        async update(data) {
             return await sendJSON('PUT', data);
         },
-        async remove(id)
-        {
+        async remove(id) {
             return await sendJSON('DELETE', { id });
         }
     };

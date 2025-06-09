@@ -76,12 +76,12 @@ function setupFormHandler() {
                 await studentsSubjectsAPI.create(relation);
                 sharedUI.showMessage('Inscripción creada correctamente.', 'success');
             }
+            sharedUI.setIgnoreNextReset();
             clearForm();
             loadRelations();
         } catch (err) {
             console.error('Error guardando relación:', err.message);
             sharedUI.showMessage(err.message, 'error');
-            // Detectar el input a marcar según el mensaje de error
             if (err.message.includes('estudiante')) {
                 sharedUI.markInputError('studentIdSelect');
             } else if (err.message.includes('materia')) {
@@ -179,6 +179,8 @@ async function confirmDelete(id) {
 
     try {
         await studentsSubjectsAPI.remove(id);
+        sharedUI.setIgnoreNextReset();
+        clearForm();
         sharedUI.showMessage('Inscripción borrada correctamente.', 'success');
         loadRelations();
     } catch (err) {

@@ -151,6 +151,7 @@ async function confirmDelete(id) {
     if (!confirm('¿Seguro que deseas borrar esta materia?')) return;
     try {
         await subjectsAPI.remove(id);
+        clearForm();
         sharedUI.showMessage('Materia borrada correctamente.', 'success');
         loadSubjects();
     } catch (err) {

@@ -224,6 +224,44 @@
 #messageBox {
   display: none;
   z-index: 1000;
+  max-width: 400px;
+  margin: 24px auto 24px auto;
+  padding: 14px 44px 14px 18px;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px 0 #0002;
+  position: relative;
+  font-size: 1rem;
+  transition: opacity 0.3s, transform 0.3s;
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+#messageBox.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#closeMessage {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #003c3a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+#closeMessage:hover {
+  opacity: 1;
+  color: #fff;
+  text-shadow: 0 0 4px #f44336, 0 0 2px #000;
 }
 
 /* ==========================

@@ -12,22 +12,20 @@ import { studentsAPI } from '../api/studentsAPI.js';
 import * as sharedUI from '../common/sharedUI.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await sharedUI.loadSharedUI();           // ← Carga el cartel y el footer
+    await sharedUI.loadSharedUI();
     loadStudents();
     setupFormHandler();
     setupCancelHandler();
     sharedUI.setupFormMessageReset('studentForm');
     setupEmailValidation();
 });
-  
-function setupFormHandler()
-{
+
+function setupFormHandler() {
     const form = document.getElementById('studentForm');
-    form.addEventListener('submit', async e => 
-    {
+    form.addEventListener('submit', async e => {
         e.preventDefault();
         const student = getFormData();
-    
+
         // Validación frontend
         if (!student.fullname) {
             sharedUI.showMessage('El nombre es obligatorio.', 'error');
@@ -44,62 +42,55 @@ function setupFormHandler()
             sharedUI.markInputError('age');
             return;
         }
-        
 
-        try 
-        {
-            if (student.id) 
-            {
+        try {
+            if (student.id) {
                 await studentsAPI.update(student);
                 sharedUI.showMessage('Estudiante actualizado correctamente.', 'success');
-            } 
-            else 
-            {
+            } else {
                 await studentsAPI.create(student);
                 sharedUI.showMessage('Estudiante agregado correctamente.', 'success');
             }
+            sharedUI.setIgnoreNextReset();
             clearForm();
             loadStudents();
         } catch (err) {
-            console.error(err); // Para debugging
-            sharedUI.showMessage(err.message, 'error'); // Para el usuario
-
-            // Detectar el input a marcar según el mensaje de error
+            console.error(err);
+            sharedUI.showMessage(err.message, 'error');
             if (err.message.includes('email')) {
                 sharedUI.markInputError('email');
-            } else if (err.message.includes('edad') || err.message.includes('Edad')) {
+            } else if (err.message.toLowerCase().includes('edad')) {
                 sharedUI.markInputError('age');
-            } else if (err.message.includes('nombre') || err.message.includes('Nombre')) {
+            } else if (err.message.toLowerCase().includes('nombre')) {
                 sharedUI.markInputError('fullname');
             }
         }
     });
 }
 
-function setupCancelHandler()
-{
+function setupCancelHandler() {
     const cancelBtn = document.getElementById('cancelBtn');
-    cancelBtn.addEventListener('click', () => 
-    {
-        document.getElementById('studentId').value = '';
-    });
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            document.getElementById('studentId').value = '';
+        });
+    }
 }
 
 function setupEmailValidation() {
-  const emailInput = document.getElementById('email');
-  if (!emailInput) return;
+    const emailInput = document.getElementById('email');
+    if (!emailInput) return;
 
-  emailInput.addEventListener('input', () => {
-    if (emailInput.validity.patternMismatch) {
-      emailInput.setCustomValidity('Ingrese un email válido. Ej: nombre@dominio.com.ar');
-    } else {
-      emailInput.setCustomValidity('');
-    }
-  });
+    emailInput.addEventListener('input', () => {
+        if (emailInput.validity.patternMismatch) {
+            emailInput.setCustomValidity('Ingrese un email válido. Ej: nombre@dominio.com.ar');
+        } else {
+            emailInput.setCustomValidity('');
+        }
+    });
 }
-  
-function getFormData()
-{
+
+function getFormData() {
     return {
         id: document.getElementById('studentId').value.trim(),
         fullname: document.getElementById('fullname').value.trim(),
@@ -107,87 +98,76 @@ function getFormData()
         age: parseInt(document.getElementById('age').value.trim(), 10)
     };
 }
-  
-function clearForm()
-{
+
+function clearForm() {
     document.getElementById('studentForm').reset();
     document.getElementById('studentId').value = '';
 }
-  
-async function loadStudents()
-{
-    try 
-    {
+
+async function loadStudents() {
+    try {
         const students = await studentsAPI.fetchAll();
         renderStudentTable(students);
-    } 
-    catch (err) 
-    {
+    } catch (err) {
         console.error('Error cargando estudiantes:', err.message);
         sharedUI.showMessage('Error cargando estudiantes.', 'error');
     }
 }
-  
-function renderStudentTable(students)
-{
+
+function renderStudentTable(students) {
     const tbody = document.getElementById('studentTableBody');
     tbody.replaceChildren();
-  
-    students.forEach(student => 
-    {
+
+    students.forEach(student => {
         const tr = document.createElement('tr');
-    
         tr.appendChild(createCell(student.fullname));
         tr.appendChild(createCell(student.email));
         tr.appendChild(createCell(student.age.toString()));
         tr.appendChild(createActionsCell(student));
-    
         tbody.appendChild(tr);
     });
 }
-  
-function createCell(text)
-{
+
+function createCell(text) {
     const td = document.createElement('td');
     td.textContent = text;
     return td;
 }
-  
-function createActionsCell(student)
-{
+
+function createActionsCell(student) {
     const td = document.createElement('td');
-  
+
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Editar';
     editBtn.className = 'lp-button lp-cyan lp-small';
     editBtn.addEventListener('click', () => fillForm(student));
-  
+
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Borrar';
     deleteBtn.className = 'lp-button lp-coral lp-small lp-margin-left';
     deleteBtn.addEventListener('click', () => confirmDelete(student.id));
-  
+
     td.appendChild(editBtn);
     td.appendChild(deleteBtn);
     return td;
 }
-  
-function fillForm(student)
-{
+
+function fillForm(student) {
     document.getElementById('studentId').value = student.id;
     document.getElementById('fullname').value = student.fullname;
     document.getElementById('email').value = student.email;
     document.getElementById('age').value = student.age;
-    sharedUI.clearInputError(); 
-    sharedUI.showMessage(`Editando a ${student.fullname}`, 'info'); // Azul por defecto
+    sharedUI.clearInputError();
+    sharedUI.showMessage(`Editando a ${student.fullname}`, 'info');
 }
-  
-async function confirmDelete(id) 
-{
+
+async function confirmDelete(id) {
     if (!confirm('¿Estás seguro que deseas borrar este estudiante?')) return;
 
     try {
         await studentsAPI.remove(id);
+        sharedUI.setIgnoreNextReset();
+        clearForm();
         sharedUI.showMessage('Estudiante borrado correctamente.', 'success');
         loadStudents();
     } catch (err) {
@@ -195,4 +175,3 @@ async function confirmDelete(id)
         sharedUI.showMessage(err.message, 'error');
     }
 }
-  
