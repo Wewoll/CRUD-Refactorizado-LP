@@ -19,11 +19,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     sharedUI.setupFormMessageReset('subjectForm');
 });
 
-function setupFormHandler()
-{
+function setupFormHandler() {
     const form = document.getElementById('subjectForm');
-    form.addEventListener('submit', async e => 
-    {
+    form.addEventListener('submit', async e => {
         e.preventDefault();
         const subject = getFormData();
 
@@ -34,26 +32,20 @@ function setupFormHandler()
             return;
         }
 
-        try 
-        {
-            if (subject.id) 
-            {
+        try {
+            if (subject.id) {
                 await subjectsAPI.update(subject);
                 sharedUI.showMessage('Materia actualizada correctamente.', 'success');
-            }
-            else
-            {
+            } else {
                 await subjectsAPI.create(subject);
                 sharedUI.showMessage('Materia creada correctamente.', 'success');
             }
+            sharedUI.setIgnoreNextReset();
             clearForm();
             loadSubjects();
-        }
-        catch (err)
-        {
+        } catch (err) {
             console.error(err);
             sharedUI.showMessage(err.message, 'error');
-            // Detectar el input a marcar según el mensaje de error
             if (err.message.includes('nombre') || err.message.includes('Nombre')) {
                 sharedUI.markInputError('name');
             }
@@ -61,8 +53,7 @@ function setupFormHandler()
     });
 }
 
-function setupCancelHandler()
-{
+function setupCancelHandler() {
     const cancelBtn = document.getElementById('cancelBtn');
     if (cancelBtn) {
         cancelBtn.addEventListener('click', () => {
@@ -71,41 +62,33 @@ function setupCancelHandler()
     }
 }
 
-function getFormData()
-{
+function getFormData() {
     return {
         id: document.getElementById('subjectId').value.trim(),
         name: document.getElementById('name').value.trim()
     };
 }
 
-function clearForm()
-{
+function clearForm() {
     document.getElementById('subjectForm').reset();
     document.getElementById('subjectId').value = '';
 }
 
-async function loadSubjects()
-{
-    try
-    {
+async function loadSubjects() {
+    try {
         const subjects = await subjectsAPI.fetchAll();
         renderSubjectTable(subjects);
-    }
-    catch (err)
-    {
+    } catch (err) {
         console.error('Error cargando materias:', err.message);
         sharedUI.showMessage('Error cargando materias.', 'error');
     }
 }
 
-function renderSubjectTable(subjects)
-{
+function renderSubjectTable(subjects) {
     const tbody = document.getElementById('subjectTableBody');
     tbody.replaceChildren();
 
-    subjects.forEach(subject =>
-    {
+    subjects.forEach(subject => {
         const tr = document.createElement('tr');
         tr.appendChild(createCell(subject.name));
         tr.appendChild(createActionsCell(subject));
@@ -113,15 +96,13 @@ function renderSubjectTable(subjects)
     });
 }
 
-function createCell(text)
-{
+function createCell(text) {
     const td = document.createElement('td');
     td.textContent = text;
     return td;
 }
 
-function createActionsCell(subject)
-{
+function createActionsCell(subject) {
     const td = document.createElement('td');
 
     const editBtn = document.createElement('button');
@@ -139,8 +120,7 @@ function createActionsCell(subject)
     return td;
 }
 
-function fillForm(subject)
-{
+function fillForm(subject) {
     document.getElementById('subjectId').value = subject.id;
     document.getElementById('name').value = subject.name;
     sharedUI.clearInputError();
@@ -151,6 +131,7 @@ async function confirmDelete(id) {
     if (!confirm('¿Seguro que deseas borrar esta materia?')) return;
     try {
         await subjectsAPI.remove(id);
+        sharedUI.setIgnoreNextReset();
         clearForm();
         sharedUI.showMessage('Materia borrada correctamente.', 'success');
         loadSubjects();
