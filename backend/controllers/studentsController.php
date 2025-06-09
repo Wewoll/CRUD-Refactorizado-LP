@@ -24,29 +24,29 @@ function handleGet($conn) {
     }
 }
 
+function validarDatosEstudiante($fullname, $email, $age) {
+    if (trim($fullname) === '' || trim($email) === '' || $age === '') {
+        sendError(400, "Todos los campos son obligatorios.");
+        return false;
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        sendError(400, "El email ingresado no es válido.");
+        return false;
+    }
+    if (!is_numeric($age) || intval($age) <= 0 || intval($age) > 100) {
+        sendError(400, "Por favor, ingrese una edad válida entre 1 y 100.");
+        return false;
+    }
+    return true;
+}
+
 function handlePost($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
     $fullname = trim($input['fullname'] ?? '');
     $email = trim($input['email'] ?? '');
     $age = $input['age'] ?? '';
 
-    // Validación de campos obligatorios
-    if ($fullname === '' || $email === '' || $age === '') {
-        sendError(400, "Todos los campos son obligatorios.");
-        return;
-    }
-
-    // Validación de email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        sendError(400, "El email ingresado no es válido.");
-        return;
-    }
-
-    // Validación de edad (opcional, pero recomendable)
-    if (!is_numeric($age) || intval($age) <= 0 || intval($age) > 100) {
-        sendError(400, "Por favor, ingrese una edad válida entre 1 y 100.");
-        return;
-    }
+    if (!validarDatosEstudiante($fullname, $email, $age)) return;
 
     $result = createStudent($conn, $fullname, $email, intval($age));
 
@@ -59,11 +59,15 @@ function handlePost($conn) {
     }
 }
 
-
 function handlePut($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
+    $fullname = trim($input['fullname'] ?? '');
+    $email = trim($input['email'] ?? '');
+    $age = $input['age'] ?? '';
 
-    $result = updateStudent($conn, $input['id'], $input['fullname'], $input['email'], $input['age']);
+    if (!validarDatosEstudiante($fullname, $email, $age)) return;
+
+    $result = updateStudent($conn, $input['id'], $fullname, $email, $age);
 
     if ($result['updated'] > 0) {
         sendSuccess("Estudiante actualizado correctamente");

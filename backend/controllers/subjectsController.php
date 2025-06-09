@@ -24,11 +24,21 @@ function handleGet($conn) {
     }
 }
 
-function handlePost($conn) 
-{
-    $input = json_decode(file_get_contents("php://input"), true);
+function validarDatosMateria($name) {
+    if (trim($name) === '') {
+        sendError(400, "El nombre de la materia es obligatorio.");
+        return false;
+    }
+    return true;
+}
 
-    $result = createSubject($conn, $input['name']);
+function handlePost($conn) {
+    $input = json_decode(file_get_contents("php://input"), true);
+    $name = trim($input['name'] ?? '');
+
+    if (!validarDatosMateria($name)) return;
+
+    $result = createSubject($conn, $name);
 
     if ($result['inserted'] > 0) {
         sendSuccess("Materia agregada correctamente.");
@@ -41,8 +51,11 @@ function handlePost($conn)
 
 function handlePut($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
+    $name = trim($input['name'] ?? '');
 
-    $result = updateSubject($conn, $input['id'], $input['name']);
+    if (!validarDatosMateria($name)) return;
+
+    $result = updateSubject($conn, $input['id'], $name);
 
     if ($result['updated'] > 0) {
         sendSuccess("Materia actualizada correctamente.");

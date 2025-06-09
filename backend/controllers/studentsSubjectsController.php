@@ -17,10 +17,23 @@ function handleGet($conn) {
     echo json_encode($studentsSubjects);
 }
 
+function validarDatosRelacion($student_id, $subject_id) {
+    if (empty($student_id) || empty($subject_id)) {
+        sendError(400, "Debe seleccionar un estudiante y una materia.");
+        return false;
+    }
+    return true;
+}
+
 function handlePost($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = assignSubjectToStudent($conn, $input['student_id'], $input['subject_id'], $input['approved']);
+    $student_id = $input['student_id'] ?? '';
+    $subject_id = $input['subject_id'] ?? '';
+
+    if (!validarDatosRelacion($student_id, $subject_id)) return;
+
+    $result = assignSubjectToStudent($conn, $student_id, $subject_id, $input['approved']);
 
     if ($result['inserted'] > 0) {
         sendSuccess("Relacion agregada correctamente.");
@@ -38,6 +51,8 @@ function handlePut($conn) {
         sendError(400, "Datos incompletos.");
         return;
     }
+
+    if (!validarDatosRelacion($input['student_id'], $input['subject_id'])) return;
 
     $result = updateStudentSubject($conn, $input['id'], $input['student_id'], $input['subject_id'], $input['approved']);
 
