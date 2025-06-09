@@ -95,7 +95,8 @@ INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES
 (1, 1),
 (1, 2),
 (2, 3),
-(3, 4);
+(3, 4),
+(4, 2);
 
 -- =========================
 -- Fin del script

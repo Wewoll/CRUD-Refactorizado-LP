@@ -1,0 +1,52 @@
+<!-- frontend/html/teachersSubjects.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asignación de Profesores a Materias</title>
+  <link rel="icon" href="../img/icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script type="module" src="../js/controllers/teachersSubjectsController.js"></script>
+</head>
+
+<body class="lp-font lp-container lp-light-grey">
+
+  <h2 class="lp-title lp-center lp-margin-top">Asignación de Profesores a Materias</h2>
+
+  <form id="relationForm" class="lp-card lp-padding lp-margin-bottom lp-white" novalidate>
+    <input type="hidden" id="relationId" />
+
+    <div id="formFieldsRow" class="lp-row-padding">
+      <div class="lp-third">
+        <label for="teacherIdSelect" class="lp-small-margin-left">Profesor</label>
+        <select id="teacherIdSelect" class="lp-select" required>
+          <option value="" disabled selected>Seleccionar profesor</option>
+          <!-- Opciones se cargan dinámicamente desde JS -->
+        </select>
+      </div>
+      <div class="lp-third">
+        <label for="subjectIdSelect" class="lp-small-margin-left">Materia</label>
+        <select id="subjectIdSelect" class="lp-select" required>
+          <option value="" disabled selected>Seleccionar materia</option>
+          <!-- Opciones se cargan dinámicamente desde JS -->
+        </select>
+      </div>
+    </div>
+  </form>
+
+  <table class="lp-table-all lp-hoverable lp-card">
+    <thead>
+      <tr class="lp-light-aquamarine">
+        <th>Profesor</th>
+        <th>Materia</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="relationTableBody"></tbody>
+  </table>
+  
+</body>
+</html>

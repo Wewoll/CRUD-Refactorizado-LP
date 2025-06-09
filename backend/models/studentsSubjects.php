@@ -104,4 +104,28 @@ function removeStudentSubject($conn, $id) {
         ];
     }
 }
+
+function isStudentAlsoTeacher($conn, $student_id, $subject_id) {
+    // Obtener email del estudiante
+    $stmt = $conn->prepare("SELECT email FROM students WHERE id = ?");
+    $stmt->bind_param("i", $student_id);
+    $stmt->execute();
+    $stmt->bind_result($email);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Buscar si existe un profesor con ese email en esa materia
+    $stmt2 = $conn->prepare(
+        "SELECT ts.id FROM teachers t
+         JOIN teachers_subjects ts ON t.id = ts.teacher_id
+         WHERE t.email = ? AND ts.subject_id = ?"
+    );
+    $stmt2->bind_param("si", $email, $subject_id);
+    $stmt2->execute();
+    $stmt2->store_result();
+    $exists = $stmt2->num_rows > 0;
+    $stmt2->close();
+
+    return $exists;
+}
 ?>

@@ -22,6 +22,11 @@ function validarDatosRelacion($student_id, $subject_id) {
         sendError(400, "Debe seleccionar un estudiante y una materia.");
         return false;
     }
+    // Verificar si el estudiante ya está como profesor en esa materia
+    if (isStudentAlsoTeacher($conn, $student_id, $subject_id)) {
+        sendError(400, "No se puede inscribir como estudiante en una materia donde ya está asignado como profesor.");
+        return false;
+    }
     return true;
 }
 
@@ -31,7 +36,7 @@ function handlePost($conn) {
     $student_id = $input['student_id'] ?? '';
     $subject_id = $input['subject_id'] ?? '';
 
-    if (!validarDatosRelacion($student_id, $subject_id)) return;
+    if (!validarDatosRelacion($conn, $student_id, $subject_id)) return;
 
     $result = assignSubjectToStudent($conn, $student_id, $subject_id, $input['approved']);
 
@@ -52,7 +57,7 @@ function handlePut($conn) {
         return;
     }
 
-    if (!validarDatosRelacion($input['student_id'], $input['subject_id'])) return;
+    if (!validarDatosRelacion($conn, $input['student_id'], $input['subject_id'])) return;
 
     $result = updateStudentSubject($conn, $input['id'], $input['student_id'], $input['subject_id'], $input['approved']);
 
