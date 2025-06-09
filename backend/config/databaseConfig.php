@@ -12,9 +12,9 @@
 require_once __DIR__ . '/../helpers/utils.php';
 
 $host = "localhost";
-$user = "students_user_3";
+$user = "academic_user";
 $password = "12345";
-$database = "students_db_3";
+$database = "academic_db";
 
 $conn = new mysqli($host, $user, $password, $database);
 

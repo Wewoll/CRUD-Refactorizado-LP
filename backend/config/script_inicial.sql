@@ -1,73 +1,102 @@
-/*****************TODA ESTA PRIMER PARTE SE DEBE EJECUTAR COMO ROOT************/
-/*Crear la base de datos*/
-CREATE DATABASE IF NOT EXISTS students_db_3
-CHARACTER SET utf8 
-COLLATE utf8_unicode_ci;
+-- =========================
+-- Crear base de datos y usuario (ejecutar como root)
+-- =========================
 
-/*Crear usuario de la base de datos*/
-CREATE USER 'students_user_3'@'localhost' IDENTIFIED BY '12345';
+CREATE DATABASE academic_db CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-/*Otorgar todos los permisos sobre la base de datos*/
-GRANT ALL PRIVILEGES ON students_db_3.* TO 'students_user_3'@'localhost';
+CREATE USER 'academic_user'@'localhost' IDENTIFIED BY '12345';
 
-/*Aplicar los cambios en los permisos​*/
-FLUSH PRIVILEGES;​
-/******************************************************************************/
+GRANT ALL PRIVILEGES ON academic_db.* TO 'academic_user'@'localhost';
+FLUSH PRIVILEGES;
 
-/*************A PARTIR DE ACÁ SE PUEDE HACER COMO ROOT 
-O PARA MAYOR SEGURIDAD CON EL USUARIO students_user_3****************************/
-/*Usar la base de datos​ o ingresar en el Adminer o PHPMyAdmin a la base de datos*/
-USE students_db_3;
+USE academic_db;
 
-/*Crear la tabla students*/
-CREATE TABLE IF NOT EXISTS students (
+-- =========================
+-- Tabla students
+-- =========================
+
+CREATE TABLE students (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fullname VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     age INT NOT NULL
 ) ENGINE=INNODB;
 
-/*Insertar algunos datos de prueba*/
 INSERT INTO students (fullname, email, age) VALUES
 ('Ana García', 'ana@example.com', 21),
 ('Lucas Torres', 'lucas@example.com', 24),
 ('Marina Díaz', 'marina@example.com', 22);
 
-/*Crear la tabla subjects*/
+-- =========================
+-- Tabla teachers
+-- =========================
+
+CREATE TABLE teachers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    age INT NOT NULL
+) ENGINE=INNODB;
+
+INSERT INTO teachers (fullname, email, age) VALUES
+('Carlos Pérez', 'carlos.perez@uni.edu', 45),
+('Sofía López', 'sofia.lopez@uni.edu', 38),
+('Martín Ruiz', 'martin.ruiz@uni.edu', 50),
+("Gabriel Gonzales Ferreira", "gaby@uni.edu", 45);
+
+-- =========================
+-- Tabla subjects
+-- =========================
+
 CREATE TABLE subjects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 ) ENGINE=INNODB;
 
-/*Insertar materias de prueba*/
 INSERT INTO subjects (name) VALUES 
 ('Tecnologías A'), 
 ('Tecnologías B'), 
 ('Algoritmos y Estructura de Datos I'), 
 ('Fundamentos de Informática');
 
-/*Crear TABLA INTERMEDIA students_subjects
-Constraints, o restricción UNIQUE(student_id, subject_id): garantiza que un estudiante
-no tenga dos veces la misma materia*/
-/*approved: si está aprobada la materia o no (por defecto FALSE).
-ON DELETE CASCADE: si eliminás un estudiante o materia, se borra
-su asignación automáticamente.*/
+-- =========================
+-- Tabla students_subjects
+-- =========================
+
 CREATE TABLE students_subjects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     subject_id INT NOT NULL,
     approved BOOLEAN DEFAULT FALSE,
     UNIQUE (student_id, subject_id),
-    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+    FOREIGN KEY (student_id) REFERENCES students(id),
+    FOREIGN KEY (subject_id) REFERENCES subjects(id)
 ) ENGINE=INNODB;
 
-/*Insertar relaciones de prueba students_subjects*/
 INSERT INTO students_subjects (student_id, subject_id, approved) VALUES
 (1, 1, 1),
-(2, 2, 0);
+(2, 2, 0),
+(3, 3, 1);
 
-/*VOLVER TODO A CERO, BORRAR BASE DE DATOS Y USUARIO (SE DEBERÍA EJECUTAR COMO ROOT)*/
-/*REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'students_user_3'@'localhost';
-DROP USER 'students_user_3'@'localhost';
-DROP DATABASE students_db_3;*/
+-- =========================
+-- Tabla teachers_subjects
+-- =========================
+
+CREATE TABLE teachers_subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    teacher_id INT NOT NULL,
+    subject_id INT NOT NULL,
+    UNIQUE (teacher_id, subject_id),
+    FOREIGN KEY (teacher_id) REFERENCES teachers(id),
+    FOREIGN KEY (subject_id) REFERENCES subjects(id)
+) ENGINE=INNODB;
+
+INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES
+(1, 1),
+(1, 2),
+(2, 3),
+(3, 4);
+
+-- =========================
+-- Fin del script
+-- =========================
