@@ -79,8 +79,13 @@ export async function insertFormButtons() {
  * Inserta el footer al final del body.
  */
 export async function insertFooter() {
-    // Solo insertar footer si NO estamos en index.html
-    if (window.location.pathname.endsWith('index.html')) return;
+    // No insertar footer si estamos en index.html o en la raíz del frontend
+    const path = window.location.pathname;
+    if (
+        path.endsWith('/index.html') ||
+        path.endsWith('/frontend/') ||
+        path === '/CRUD-Refactorizado-LP/frontend/' // por si acaso
+    ) return;
     const base = getComponentsBasePath();
     const html = await fetch(base + 'footer.html').then(res => res.text());
     document.body.insertAdjacentHTML('beforeend', html);
