@@ -12,11 +12,11 @@
   <script type="module" src="../js/controllers/teachersSubjectsController.js"></script>
 </head>
 
-<body class="lp-font lp-container lp-light-grey">
+<body class="lp-font lp-container">
 
   <h2 class="lp-title lp-center lp-margin-top">Asignación de Profesores a Materias</h2>
 
-  <form id="relationForm" class="lp-card lp-padding lp-margin-bottom lp-white" novalidate>
+  <form id="relationForm" class="lp-card lp-padding lp-margin-bottom" novalidate>
     <input type="hidden" id="relationId" />
 
     <div id="formFieldsRow" class="lp-row-padding">
@@ -24,14 +24,12 @@
         <label for="teacherIdSelect" class="lp-small-margin-left">Profesor</label>
         <select id="teacherIdSelect" class="lp-select" required>
           <option value="" disabled selected>Seleccionar profesor</option>
-          <!-- Opciones se cargan dinámicamente desde JS -->
         </select>
       </div>
       <div class="lp-third">
         <label for="subjectIdSelect" class="lp-small-margin-left">Materia</label>
         <select id="subjectIdSelect" class="lp-select" required>
           <option value="" disabled selected>Seleccionar materia</option>
-          <!-- Opciones se cargan dinámicamente desde JS -->
         </select>
       </div>
     </div>
@@ -39,7 +37,7 @@
 
   <table class="lp-table-all lp-hoverable lp-card">
     <thead>
-      <tr class="lp-light-aquamarine">
+      <tr class="lp-table-header">
         <th>Profesor</th>
         <th>Materia</th>
         <th>Acciones</th>

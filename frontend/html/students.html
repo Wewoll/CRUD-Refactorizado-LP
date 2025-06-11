@@ -12,11 +12,11 @@
   <script type="module" src="../js/controllers/studentsController.js"></script>
 </head>
 
-<body class="lp-font lp-container lp-light-grey">
+<body class="lp-font lp-container">
 
   <h2 class="lp-title lp-center lp-margin-top">Gestión de Estudiantes</h2>
 
-  <form id="studentForm" class="lp-card lp-padding lp-margin-bottom lp-white" novalidate>
+  <form id="studentForm" class="lp-card lp-padding lp-margin-bottom" novalidate>
     <input type="hidden" id="studentId" />
 
     <div id="formFieldsRow" class="lp-row-padding">
@@ -26,7 +26,7 @@
       </div>
       <div class="lp-third">
         <label for="email" class="lp-small-margin-left">Email</label>
-        <input class="lp-input" type="text" id="email" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"  required />
+        <input class="lp-input" type="text" id="email" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required />
       </div>
       <div class="lp-third">
         <label for="age" class="lp-small-margin-left">Edad</label>
@@ -37,7 +37,7 @@
 
   <table class="lp-table-all lp-hoverable lp-card">
     <thead>
-      <tr class="lp-light-aquamarine">
+      <tr class="lp-table-header">
         <th>Nombre</th>
         <th>Email</th>
         <th>Edad</th>

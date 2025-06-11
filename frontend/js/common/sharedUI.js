@@ -1,47 +1,107 @@
 // frontend/js/common/sharedUI.js
 
-// Inserta el cartel de mensaje y el footer
+/**
+ * Devuelve el path base para los componentes según la ubicación del HTML.
+ * Si el archivo está en /html/, devuelve '../components/', si está en raíz, devuelve 'components/'
+ */
+function getComponentsBasePath() {
+    // Si la URL contiene /html/, estamos en una subcarpeta
+    if (window.location.pathname.includes('/html/')) {
+        return '../components/';
+    }
+    return 'components/';
+}
+
+/**
+ * Inserta el toggle de modo oscuro al principio del body.
+ */
+export async function insertThemeToggle() {
+    const base = getComponentsBasePath();
+    const html = await fetch(base + 'themeToggle.html').then(res => res.text());
+    document.body.insertAdjacentHTML('afterbegin', html);
+
+    // Activar el toggle
+    const themeBtn = document.getElementById('toggleThemeBtn');
+    if (themeBtn) {
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            themeBtn.textContent = 'Modo claro';
+        }
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const dark = document.body.classList.contains('dark-mode');
+            themeBtn.textContent = dark ? 'Modo claro' : 'Modo oscuro';
+            localStorage.setItem('darkMode', dark);
+        });
+    }
+}
+
+/**
+ * Inserta el cartel de mensaje después del <h2> o al principio del body.
+ */
+export async function insertMessageBox() {
+    const base = getComponentsBasePath();
+    const html = await fetch(base + 'messageBox.html').then(res => res.text());
+    const heading = document.querySelector('h2');
+    if (heading) {
+        heading.insertAdjacentHTML('afterend', html);
+    } else {
+        document.body.insertAdjacentHTML('afterbegin', html);
+    }
+
+    // Botón de cerrar
+    const closeBtnInterval = setInterval(() => {
+        const closeBtn = document.getElementById('closeMessage');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                const box = document.getElementById('messageBox');
+                if (box) box.style.display = 'none';
+                clearInputError();
+            });
+            clearInterval(closeBtnInterval);
+        }
+    }, 100);
+}
+
+/**
+ * Inserta los botones del formulario después de los campos, si existe el form.
+ */
+export async function insertFormButtons() {
+    const base = getComponentsBasePath();
+    const formFieldsRow = document.getElementById('formFieldsRow');
+    if (formFieldsRow) {
+        const html = await fetch(base + 'formButtons.html').then(res => res.text());
+        formFieldsRow.insertAdjacentHTML('afterend', html);
+    }
+}
+
+/**
+ * Inserta el footer al final del body.
+ */
+export async function insertFooter() {
+    // Solo insertar footer si NO estamos en index.html
+    if (window.location.pathname.endsWith('index.html')) return;
+    const base = getComponentsBasePath();
+    const html = await fetch(base + 'footer.html').then(res => res.text());
+    document.body.insertAdjacentHTML('beforeend', html);
+}
+/**
+ * Carga todos los componentes compartidos.
+ * Llamar a esta función en el controlador principal de cada página.
+ */
 export async function loadSharedUI() {
     try {
-        // Cargar e insertar el cartel de mensaje después del <h2>
-        const messageBoxHtml = await fetch('../components/messageBox.html').then(res => res.text());
-        const heading = document.querySelector('h2');
-        if (heading) {
-            heading.insertAdjacentHTML('afterend', messageBoxHtml);
-        } else {
-            document.body.insertAdjacentHTML('afterbegin', messageBoxHtml);
-        }
-
-        // Agregar comportamiento al botón de cerrar del messageBox
-        const closeBtnInterval = setInterval(() => {
-            const closeBtn = document.getElementById('closeMessage');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    const box = document.getElementById('messageBox');
-                    if (box) box.style.display = 'none';
-                    clearInputError();
-                });
-                clearInterval(closeBtnInterval);
-            }
-        }, 100);
-
-        // Cargar e insertar los botones del formulario después de los campos
-        const formFieldsRow = document.getElementById('formFieldsRow');
-        if (formFieldsRow) {
-            const formButtonsHtml = await fetch('../components/formButtons.html').then(res => res.text());
-            formFieldsRow.insertAdjacentHTML('afterend', formButtonsHtml);
-        }
-
-        // Cargar e insertar el footer al final del body
-        const footerHtml = await fetch('../components/footer.html').then(res => res.text());
-        document.body.insertAdjacentHTML('beforeend', footerHtml);
-
+        await insertThemeToggle();
+        await insertMessageBox();
+        await insertFormButtons();
+        await insertFooter();
     } catch (err) {
         console.error('Error cargando componentes compartidos:', err);
         showMessage('Error cargando la interfaz. Por favor, recargue la página.', 'error');
     }
 }
 
+// Solucion temporal al uso del boton reset
 export let ignoreNextReset = false;
 export function setIgnoreNextReset(val = true) {
     ignoreNextReset = val;

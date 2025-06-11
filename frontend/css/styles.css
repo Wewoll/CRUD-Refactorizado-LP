@@ -5,23 +5,130 @@
    ========================================================================== */
 
 /* ==========================
+   Variables de color (modo claro y oscuro)
+   ========================== */
+:root {
+  --color-bg: #f1f1f1;
+  --color-card: #fff;
+  --color-panel: #fff;
+  --color-text: #000;
+  --color-title: #003c3a;
+
+  --color-table-border: #ccc;
+  --color-table-header: #7fe6d5;
+  --color-table-even: #eafffa;
+  --color-table-odd: #fff;
+  --color-table-hover: #d2f5ee;
+
+  --color-input-bg: #fff;
+  --color-input-border: #ccc;
+  --color-input-focus: #008b8b;
+  --input-error-bg: #fff5f5;
+  --input-error-border: #f44336;
+
+  --color-message-bg: #fff;
+  --color-message-text: #000;
+  --color-close-message: #003c3a;
+  --color-close-message-hover: #fff;
+  --color-close-message-shadow: #f44336;
+
+  --btn-cyan: #00bcd4;
+  --btn-cyan-hover: #0097a7;
+  --btn-aqua: #009e96;
+  --btn-aqua-hover: #00756f;
+  --btn-coral: #ff6f61;
+  --btn-coral-hover: #d8432a;
+  --btn-aqua-light: #4fd1c5;
+  --btn-aqua-light-hover: #26b6a7;
+  --btn-aqua-dark: #003c3a;
+  --btn-aqua-dark-hover: #001f1e;
+
+  --msg-success-bg: #e6f9f3;
+  --msg-success-text: #00695c;
+  --msg-error-bg: #ffeaea;
+  --msg-error-text: #b71c1c;
+  --msg-info-bg: #e3f2fd;
+  --msg-info-text: #1565c0;
+  --msg-warning-bg: #fff8e1;
+  --msg-warning-text: #b26a00;
+
+  --selection-bg: #008b8b;
+  --selection-text: #fff;
+}
+
+body.dark-mode,
+.dark-mode {
+  --color-bg: #181c1f;
+  --color-card: #23272a;
+  --color-panel: #23272a;
+  --color-text: #e0e0e0;
+  --color-title: #7fe6d5;
+
+  --color-table-border: #444;
+  --color-table-header: #126962;
+  --color-table-even: #23272a;
+  --color-table-odd: #181c1f;
+  --color-table-hover: #263238;
+
+  --color-input-bg: #23272a;
+  --color-input-border: #479189;
+  --color-input-focus: #7fe6d5;
+  --input-error-bg: #3a2323;
+  --input-error-border: #ffb3a7;
+
+  --color-message-bg: #23272a;
+  --color-message-text: #e0e0e0;
+  --color-close-message: #7fe6d5;
+  --color-close-message-hover: #fff;
+  --color-close-message-shadow: #f44336;
+
+  --btn-cyan: #127a8a;
+  --btn-cyan-hover: #26e6ff;
+  --btn-aqua: #00635c;
+  --btn-aqua-hover: #4fd1c5;
+  --btn-coral: #b84a3a;
+  --btn-coral-hover: #ffb3a7;
+  --btn-aqua-light: #267e7a;
+  --btn-aqua-light-hover: #7fe6d5;
+  --btn-aqua-dark: #3bb3a6;
+  --btn-aqua-dark-hover: #6fd3c6;
+  
+  --msg-success-bg: #1e3a36;
+  --msg-success-text: #7fe6d5;
+  --msg-error-bg: #3a2323;
+  --msg-error-text: #ffb3a7;
+  --msg-info-bg: #22303a;
+  --msg-info-text: #7fd0ff;
+  --msg-warning-bg: #3a3623;
+  --msg-warning-text: #ffe082;
+
+  --selection-bg: #008b8b;
+  --selection-text: #fff;
+}
+
+/* ==========================
    Fuente y selección de texto
    ========================== */
 .lp-font {
   font-family: 'Roboto', sans-serif;
 }
 
+body, .lp-container {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text) !important;
+}
+
 /* Selección de texto personalizada */
 ::selection {
-  background: #008b8b;
-  color: #fff;
+  background: var(--selection-bg);
+  color: var(--selection-text);
 }
 
 /* ==========================
    Títulos
    ========================== */
 .lp-title {
-  color: #003c3a;
+  color: var(--color-title) !important;
   font-weight: 700;
   letter-spacing: 1px;
 }
@@ -34,11 +141,15 @@
 }
 
 .lp-card {
+  background-color: var(--color-card) !important;
+  color: var(--color-text) !important;
   box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
   border-radius: 4px;
 }
 
 .lp-panel {
+  background-color: var(--color-panel) !important;
+  color: var(--color-text) !important;
   margin-top: 16px;
   margin-bottom: 16px;
   padding: 16px;
@@ -62,7 +173,7 @@
 .lp-ul { list-style-type: none; padding: 0; margin: 0; }
 
 /* ==========================
-   Colores
+   Colores utilitarios (no cambian con modo)
    ========================== */
 .lp-white { background-color: #fff !important; color: #000 !important; }
 .lp-black { background-color: #000 !important; color: #fff !important; }
@@ -85,7 +196,7 @@
 .lp-table-all {
   border-collapse: collapse;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-table-border);
 }
 
 .lp-table-all th, .lp-table-all td {
@@ -98,6 +209,14 @@
   padding: 10px 8px 10px 8px;
   font-weight: 600;
   letter-spacing: 0.5px;
+  background-color: var(--color-table-header) !important;
+  color: var(--color-text) !important;
+}
+
+/* Encabezado de tabla personalizado para modo claro/oscuro */
+.lp-table-header th {
+  background-color: var(--color-table-header) !important;
+  color: var(--color-text) !important;
 }
 
 .lp-table-all th:first-child,
@@ -133,9 +252,9 @@
 }
 
 /* Filas alternadas y hover */
-.lp-table-all tr:nth-child(even) { background-color: #eafffa; }
-.lp-table-all tr:nth-child(odd) { background-color: #fff; }
-.lp-hoverable tbody tr:hover { background-color: #d2f5ee; }
+.lp-table-all tr:nth-child(even) { background-color: var(--color-table-even) !important; }
+.lp-table-all tr:nth-child(odd) { background-color: var(--color-table-odd) !important; }
+.lp-hoverable tbody tr:hover { background-color: var(--color-table-hover) !important; }
 
 /* ==========================
    Formularios (inputs, selects, checks)
@@ -157,21 +276,23 @@
   box-sizing: border-box; 
   padding: 8px;
   border: none;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-input-border);
   margin-bottom: 8px;
   border-radius: 2px;
+  background-color: var(--color-input-bg);
+  color: var(--color-text);
 }
 
 .lp-input:focus, .lp-select:focus {
   outline: none;
-  border-color: #008b8b;
+  border-color: var(--color-input-focus);
   box-shadow: 0 0 0 2px #b2dfdb55;
 }
 
 .lp-input-error {
-  border-color: #f44336 !important;
-  box-shadow: 0 0 0 2px #f4433622;
-  background-color: #fff5f5;
+  border-color: var(--input-error-border) !important;
+  box-shadow: 0 0 0 2px var(--input-error-border)22;
+  background-color: var(--input-error-bg);
   transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
 }
 
@@ -203,21 +324,45 @@
 
 .lp-small { font-size: 12px !important; }
 
-/* Hover para cada color de botón */
+/* Colores y hovers para botones */
+.lp-button.lp-cyan {
+  background-color: var(--btn-cyan) !important;
+  color: #fff !important;
+}
 .lp-button.lp-cyan:hover {
-  background: #0097a7 !important;
+  background-color: var(--btn-cyan-hover) !important;
+}
+
+.lp-button.lp-aqua {
+  background-color: var(--btn-aqua) !important;
+  color: #fff !important;
 }
 .lp-button.lp-aqua:hover {
-  background: #00756f !important;
+  background-color: var(--btn-aqua-hover) !important;
+}
+
+.lp-button.lp-coral {
+  background-color: var(--btn-coral) !important;
+  color: #fff !important;
 }
 .lp-button.lp-coral:hover {
-  background: #d8432a !important;
+  background-color: var(--btn-coral-hover) !important;
+}
+
+.lp-button.lp-aqua-light {
+  background-color: var(--btn-aqua-light) !important;
+  color: #fff !important;
 }
 .lp-button.lp-aqua-light:hover {
-  background: #26b6a7 !important;
+  background-color: var(--btn-aqua-light-hover) !important;
+}
+
+.lp-button.lp-aqua-dark {
+  background-color: var(--btn-aqua-dark) !important;
+  color: #fff !important;
 }
 .lp-button.lp-aqua-dark:hover {
-  background: #001f1e !important;
+  background-color: var(--btn-aqua-dark-hover) !important;
 }
 
 /* Quitar subrayado a los botones tipo enlace */
@@ -243,11 +388,35 @@
   transition: opacity 0.3s, transform 0.3s;
   opacity: 0;
   transform: translateY(-10px);
+  background-color: var(--color-message-bg);
+  color: var(--color-message-text);
+  border-left: 6px solid var(--msg-info-text);
 }
 
 #messageBox.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+#messageBox.success {
+  background-color: var(--msg-success-bg);
+  color: var(--msg-success-text);
+  border-left-color: var(--msg-success-text);
+}
+#messageBox.error {
+  background-color: var(--msg-error-bg);
+  color: var(--msg-error-text);
+  border-left-color: var(--msg-error-text);
+}
+#messageBox.warning {
+  background-color: var(--msg-warning-bg);
+  color: var(--msg-warning-text);
+  border-left-color: var(--msg-warning-text);
+}
+#messageBox.info {
+  background-color: var(--msg-info-bg);
+  color: var(--msg-info-text);
+  border-left-color: var(--msg-info-text);
 }
 
 #closeMessage {
@@ -257,7 +426,7 @@
   transform: translateY(-50%);
   font-size: 1.5em;
   font-weight: bold;
-  color: #003c3a;
+  color: var(--color-close-message);
   background: none;
   border: none;
   cursor: pointer;
@@ -269,8 +438,8 @@
 
 #closeMessage:hover {
   opacity: 1;
-  color: #fff;
-  text-shadow: 0 0 4px #f44336, 0 0 2px #000;
+  color: var(--color-close-message-hover);
+  text-shadow: 0 0 4px var(--color-close-message-shadow), 0 0 2px #000;
 }
 
 /* ==========================
