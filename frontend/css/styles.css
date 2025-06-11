@@ -159,6 +159,13 @@ body, .lp-container {
 .lp-display-container { position: relative; }
 .lp-display-topright { position: absolute; right: 8px; top: 8px; }
 
+.lp-theme-toggle-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1001;
+}
+
 /* ==========================
    Espaciados y utilidades
    ========================== */
