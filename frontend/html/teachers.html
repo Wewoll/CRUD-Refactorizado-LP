@@ -3,49 +3,49 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de Profesores</title>
-    <link rel="icon" href="../img/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css" />
-    <script type="module" src="../js/controllers/teachersController.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Profesores</title>
+  <link rel="icon" href="../img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script type="module" src="../js/controllers/teachersController.js"></script>
 </head>
 
 <body class="lp-font lp-container">
 
-    <h2 class="lp-title lp-center lp-margin-top">Gestión de Profesores</h2>
+  <h2 class="lp-title lp-center lp-margin-top">Gestión de Profesores</h2>
 
-    <form id="teacherForm" class="lp-card lp-padding lp-margin-bottom" novalidate>
-        <input type="hidden" id="teacherId" />
+  <form id="teacherForm" class="lp-card lp-padding lp-margin-bottom" novalidate>
+    <input type="hidden" id="teacherId" />
 
-        <div id="formFieldsRow" class="lp-row-padding">
-            <div class="lp-third">
-                <label for="fullname" class="lp-small-margin-left">Nombre completo</label>
-                <input class="lp-input" type="text" id="fullname" required />
-            </div>
-            <div class="lp-third">
-                <label for="email" class="lp-small-margin-left">Email</label>
-                <input class="lp-input" type="text" id="email" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required />
-            </div>
-            <div class="lp-third">
-                <label for="age" class="lp-small-margin-left">Edad</label>
-                <input class="lp-input" type="number" id="age" required />
-            </div>
-        </div>
-    </form>
+    <div id="formFieldsRow" class="lp-row-padding">
+      <div class="lp-third">
+        <label for="fullname" class="lp-small-margin-left">Nombre completo</label>
+        <input class="lp-input" type="text" id="fullname" required />
+      </div>
+      <div class="lp-third">
+        <label for="email" class="lp-small-margin-left">Email</label>
+        <input class="lp-input" type="text" id="email" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" required />
+      </div>
+      <div class="lp-third">
+        <label for="age" class="lp-small-margin-left">Edad</label>
+        <input class="lp-input" type="number" id="age" required />
+      </div>
+    </div>
+  </form>
 
-    <table class="lp-table-all lp-hoverable lp-card">
-        <thead>
-            <tr class="lp-table-header">
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Edad</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="teacherTableBody"></tbody>
-    </table>
+  <table class="lp-table-all lp-hoverable lp-card">
+    <thead>
+      <tr class="lp-table-header">
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Edad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="teacherTableBody"></tbody>
+  </table>
   
 </body>
 </html>
