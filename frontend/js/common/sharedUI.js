@@ -187,11 +187,13 @@ export function showMessage(text, type = 'info') {
 
     // Estilos según tipo
     if (type === 'success') {
-        box.classList.add('lp-green');
+        box.classList.add('success');
     } else if (type === 'error') {
-        box.classList.add('lp-red');
+        box.classList.add('error');
+    } else if (type === 'warning') {
+        box.classList.add('warning');
     } else {
-        box.classList.add('lp-blue'); // info por defecto
+        box.classList.add('info'); // info por defecto
     }
 
     box.style.display = 'block';
